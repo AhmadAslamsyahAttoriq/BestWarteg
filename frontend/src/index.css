@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-bw-bg text-bw-text font-body min-h-screen;
+    background: radial-gradient(ellipse at 30% 20%, #3d2200 0%, #1a1108 70%);
+  }
+}
+
+@layer components {
+  .btn-gold {
+    @apply bg-bw-gold text-bw-bg font-semibold rounded-xl px-4 py-3 transition-colors hover:bg-bw-goldlight;
+  }
+  .input-field {
+    @apply w-full bg-bw-bg border border-bw-border rounded-lg px-3 py-2.5 text-bw-text placeholder:text-bw-muted focus:outline-none focus:border-bw-gold transition-colors;
+  }
+  .card-surface {
+    @apply bg-bw-surface border border-bw-border rounded-2xl;
+  }
+}
