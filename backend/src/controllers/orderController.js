@@ -33,7 +33,7 @@ export function createOrder(req, res) {
     paymentLabel: PAY_LABEL[payment] || payment,
     note: note || '',
     date: new Date().toLocaleString('id-ID'),
-    status: 'done',
+    status: 'diproses',
   };
 
   orders.push(order);
@@ -44,6 +44,17 @@ export function createOrder(req, res) {
 export function getMyOrders(req, res) {
   const myOrders = orders.filter(o => o.userId === req.user.id).slice().reverse();
   res.json({ success: true, data: myOrders });
+}
+
+export function confirmOrder(req, res) {
+  const order = orders.find(o => o.orderId === req.params.id && o.userId === req.user.id);
+  if (!order) return res.status(404).json({ success: false, message: 'Pesanan tidak ditemukan' });
+  if (order.status === 'selesai') {
+    return res.status(400).json({ success: false, message: 'Pesanan ini sudah dikonfirmasi sebelumnya' });
+  }
+  order.status = 'selesai';
+  order.confirmedAt = new Date().toLocaleString('id-ID');
+  res.json({ success: true, data: order });
 }
 
 export function deleteOrder(req, res) {
