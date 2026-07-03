@@ -46,6 +46,15 @@ export default function History() {
     }
   }
 
+  async function handleConfirm(id) {
+    try {
+      const res = await orderApi.confirm(token, id);
+      setOrders((prev) => prev.map((o) => (o.orderId === id ? res.data : o)));
+    } catch (err) {
+      alert(err.message);
+    }
+  }
+
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
       <Link to="/" className="text-bw-gold text-sm hover:underline">← Kembali ke Menu</Link>
@@ -77,7 +86,11 @@ export default function History() {
                     <p className="text-xs text-bw-muted">{o.date}</p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs bg-bw-green/20 text-bw-green px-2 py-1 rounded-full">✅ Sudah Dibayar</span>
+                    {o.status === 'selesai' ? (
+                      <span className="text-xs bg-bw-green/20 text-bw-green px-2 py-1 rounded-full">✅ Pesanan Diterima</span>
+                    ) : (
+                      <span className="text-xs bg-yellow-500/20 text-yellow-500 px-2 py-1 rounded-full">🍳 Sedang Diproses</span>
+                    )}
                     <button onClick={() => handleDelete(o.orderId)} className="text-bw-muted hover:text-bw-red">🗑</button>
                   </div>
                 </div>
@@ -89,6 +102,17 @@ export default function History() {
                   <span className="text-bw-goldlight font-semibold">{fmt(o.total)}</span>
                   <span className="text-sm text-bw-muted">{o.paymentLabel}</span>
                 </div>
+                {o.status !== 'selesai' && (
+                  <button
+                    onClick={() => handleConfirm(o.orderId)}
+                    className="btn-gold w-full mt-3 text-sm py-2"
+                  >
+                    Konfirmasi Pesanan Diterima
+                  </button>
+                )}
+                {o.status === 'selesai' && o.confirmedAt && (
+                  <p className="text-xs text-bw-muted mt-2 text-center">Diterima pada {o.confirmedAt}</p>
+                )}
               </div>
             ))}
           </div>
