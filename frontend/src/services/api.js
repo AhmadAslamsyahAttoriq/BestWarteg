@@ -24,6 +24,7 @@ function authHeader(token) {
 export const authApi = {
   register: (payload) => request('/auth/register', { method: 'POST', body: JSON.stringify(payload) }),
   login: (payload) => request('/auth/login', { method: 'POST', body: JSON.stringify(payload) }),
+  adminLogin: (payload) => request('/auth/admin-login', { method: 'POST', body: JSON.stringify(payload) }),
 };
 
 // ── Menu ──
@@ -34,6 +35,9 @@ export const menuApi = {
   },
   getCategories: () => request('/menu/categories'),
   getById: (id) => request(`/menu/${id}`),
+  create: (token, payload) =>
+    request('/menu', { method: 'POST', headers: authHeader(token), body: JSON.stringify(payload) }),
+  remove: (token, id) => request(`/menu/${id}`, { method: 'DELETE', headers: authHeader(token) }),
 };
 
 // ── Cart ──

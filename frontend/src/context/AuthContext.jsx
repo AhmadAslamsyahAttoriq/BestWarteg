@@ -12,7 +12,6 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Muat sesi dari localStorage saat aplikasi pertama kali dibuka
   useEffect(() => {
     const savedUser = localStorage.getItem('bw_user');
     const savedToken = localStorage.getItem('bw_token');
@@ -40,6 +39,12 @@ export function AuthProvider({ children }) {
     return data.user;
   }
 
+  async function adminLogin(username, password) {
+    const data = await authApi.adminLogin({ username, password });
+    persist(data.user, data.token);
+    return data.user;
+  }
+
   async function register(payload) {
     const data = await authApi.register(payload);
     persist(data.user, data.token);
@@ -59,7 +64,7 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('bw_token');
   }
 
-  const value = { user, token, loading, login, register, loginAsGuest, logout, isGuest: user?.role === 'guest' };
+  const value = { user, token, loading, login, adminLogin, register, loginAsGuest, logout, isGuest: user?.role === 'guest' };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
